@@ -32,13 +32,12 @@ class PostCard extends StatelessWidget {
                   height: 45,
                   width: double.infinity,
                   margin: const EdgeInsets.only(top: 7, right: 30, left: 10),
-                  padding: const EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(30)),
                   child: Center(
                     child: Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: Alignment.center,
                       child: Text(
                         '${user.name} oi, hom nay ban the nao ?',
                         style: Theme.of(context)
