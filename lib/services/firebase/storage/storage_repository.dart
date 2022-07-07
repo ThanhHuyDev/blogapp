@@ -24,20 +24,20 @@ class StorageRepository extends BaseStorageRepository {
     return downloadURL;
   }
 
-  //  @override
-  // Future<void> uploadImageAvatar(XFile imageAvatar) async {
-  //   try {
-  //     await storage
-  //         .ref('user_avatar/${imageAvatar.name}')
-  //         .putFile(File(imageAvatar.path))
-  //         .then((p0) => AuthenticationProvider().updateUserAvatar(imageAvatar.name));
-  //   } catch (_) {}
-  // }
+  @override
+  Future<void> uploadImageAvatar(XFile imageAvatar) async {
+    try {
+      await storage
+          .ref('user_avatar/${imageAvatar.name}')
+          .putFile(File(imageAvatar.path))
+          .then((p0) => UserReponsitory().updateUserAvatar(imageAvatar.name));
+    } catch (_) {}
+  }
 
-  // @override
-  // Future<String> getDownloadURLAvatar(String imageAvatar) async {
-  //   String downloadURLAvatar =
-  //       await storage.ref('user_avatar/${imageAvatar}').getDownloadURL();
-  //   return downloadURLAvatar;
-  // }
+  @override
+  Future<String> getDownloadURLAvatar(String imageAvatar) async {
+    String downloadURLAvatar =
+        await storage.ref('user_avatar/${imageAvatar}').getDownloadURL();
+    return downloadURLAvatar;
+  }
 }

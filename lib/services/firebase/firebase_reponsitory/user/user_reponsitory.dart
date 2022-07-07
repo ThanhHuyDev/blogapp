@@ -48,6 +48,17 @@ class UserReponsitory extends BaseUserRepository {
   }
 
   @override
+  Future<void> updateUserAvatar(String imageAvatar) async {
+    String downloadUrlAvatar =
+        await StorageRepository().getDownloadURLAvatar(imageAvatar);
+    final firebaseUser = _firebaseAuth.currentUser;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(firebaseUser!.uid)
+        .update({'imageAvatar': downloadUrlAvatar});
+  }
+
+  @override
   Stream<UserApp> getUserImage() {
     final firebaseUser = _firebaseAuth.currentUser;
     return _firebaseFirestore

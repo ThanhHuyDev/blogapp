@@ -6,7 +6,7 @@ class UserApp extends Equatable {
   final String? id;
   final String fullName;
   final String age;
-  final String imageAvatar;
+  final String? imageAvatar;
   final List<dynamic>? imageUrl;
   final String gender;
   final String phoneNumber;
@@ -16,7 +16,7 @@ class UserApp extends Equatable {
       {this.id,
       this.age = '',
       this.gender = '',
-      this.imageAvatar = '',
+      this.imageAvatar,
       this.imageUrl,
       this.fullName = '',
       this.phoneNumber = '',
@@ -51,7 +51,7 @@ class UserApp extends Equatable {
     return {
       'fullName': fullName,
       'age': age,
-      'imageAvatar': imageAvatar,
+      'imageAvatar': imageAvatar!,
       'imageUrl': imageUrl!,
       'gender': gender,
       'phoneNumber': phoneNumber,

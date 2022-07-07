@@ -1,3 +1,4 @@
+import 'package:blogapp/features/screens/home/home.dart';
 import 'package:blogapp/features/screens/onboarding/presentasions/bloc/image_album/image_album_bloc.dart';
 import 'package:blogapp/widgets/custom_image_container.dart';
 import 'package:flutter/material.dart';
@@ -38,42 +39,57 @@ class Pictures extends StatelessWidget {
                   }
                   if (state is ImageAlbumLoaded) {
                     var imageCount = state.imageUrls.length;
-                    return Column(
-                      children: [
-                        Row(
-                          children: [
-                            (imageCount > 1)
+                    return SizedBox(
+                      height: 410,
+                      child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3, childAspectRatio: 0.66),
+                          itemCount: 6,
+                          itemBuilder: (BuildContext context, int index) {
+                            return (imageCount > index + 1)
                                 ? CustomImageContainer(
-                                    imageUrl: state.imageUrls[1])
-                                : const CustomImageContainer(),
-                            (imageCount > 2)
-                                ? CustomImageContainer(
-                                    imageUrl: state.imageUrls[2])
-                                : const CustomImageContainer(),
-                            (imageCount > 3)
-                                ? CustomImageContainer(
-                                    imageUrl: state.imageUrls[3])
-                                : const CustomImageContainer(),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            (imageCount > 4)
-                                ? CustomImageContainer(
-                                    imageUrl: state.imageUrls[4])
-                                : const CustomImageContainer(),
-                            (imageCount > 5)
-                                ? CustomImageContainer(
-                                    imageUrl: state.imageUrls[5])
-                                : const CustomImageContainer(),
-                            (imageCount > 6)
-                                ? CustomImageContainer(
-                                    imageUrl: state.imageUrls[6])
-                                : const CustomImageContainer(),
-                          ],
-                        )
-                      ],
+                                    imageUrl: state.imageUrls[index + 1],
+                                  )
+                                : const CustomImageContainer();
+                          }),
                     );
+                    // return Column(
+                    //   children: [
+                    //     Row(
+                    //       children: [
+                    //         (imageCount > 1)
+                    //             ? CustomImageContainer(
+                    //                 imageUrl: state.imageUrls[1])
+                    //             : const CustomImageContainer(),
+                    //         (imageCount > 2)
+                    //             ? CustomImageContainer(
+                    //                 imageUrl: state.imageUrls[2])
+                    //             : const CustomImageContainer(),
+                    //         (imageCount > 3)
+                    //             ? CustomImageContainer(
+                    //                 imageUrl: state.imageUrls[3])
+                    //             : const CustomImageContainer(),
+                    //       ],
+                    //     ),
+                    //     Row(
+                    //       children: [
+                    //         (imageCount > 4)
+                    //             ? CustomImageContainer(
+                    //                 imageUrl: state.imageUrls[4])
+                    //             : const CustomImageContainer(),
+                    //         (imageCount > 5)
+                    //             ? CustomImageContainer(
+                    //                 imageUrl: state.imageUrls[5])
+                    //             : const CustomImageContainer(),
+                    //         (imageCount > 6)
+                    //             ? CustomImageContainer(
+                    //                 imageUrl: state.imageUrls[6])
+                    //             : const CustomImageContainer(),
+                    //       ],
+                    //     )
+                    //   ],
+                    // );
                   } else {
                     return const Text('some thing swrong!');
                   }
@@ -96,7 +112,7 @@ class Pictures extends StatelessWidget {
             ButtonDefault(
               title: 'Continute',
               press: () {
-                // tabController.animateTo(tabController.index + 1);
+                Navigator.pushReplacementNamed(context, HomeScreens.routeName);
               },
             )
           ],

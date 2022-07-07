@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'features/screens/onboarding/presentasions/bloc/auth/auth_bloc.dart';
 import 'features/screens/onboarding/presentasions/bloc/image_album/image_album_bloc.dart';
+import 'features/screens/onboarding/presentasions/bloc/image_avatar/image_avatar_bloc.dart';
 import 'features/screens/onboarding/presentasions/page/onboarding_screen.dart';
 import 'services/firebase/firebase_reponsitory/user/user_reponsitory.dart';
 
@@ -40,6 +41,10 @@ class MyApp extends StatelessWidget {
               create: (context) => ImageAlbumBloc(
                   userReponsitory: context.read<UserReponsitory>())
                 ..add(LoadImages())),
+          BlocProvider(
+              create: (context) => ImageAvatarBloc(
+                  userReponsitory: context.read<UserReponsitory>())
+                ..add(LoadImage())),
         ],
         child: BlocBuilder<SwitchBloc, SwitchState>(
           builder: (context, state) {
