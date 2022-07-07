@@ -1,35 +1,85 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
-class User extends Equatable {
-  final int id;
-  final String name;
-  final int age;
-  final List<String> imageUrl;
+class UserApp extends Equatable {
+  final String? id;
+  final String fullName;
+  final String age;
+  final String imageAvatar;
+  final List<dynamic>? imageUrl;
   final String gender;
   final String phoneNumber;
   final String status;
 
-  const User(
-      {required this.id,
-      required this.age,
-      required this.gender,
-      required this.imageUrl,
-      required this.name,
-      required this.phoneNumber,
-      required this.status});
+  const UserApp(
+      {this.id,
+      this.age = '',
+      this.gender = '',
+      this.imageAvatar = '',
+      this.imageUrl,
+      this.fullName = '',
+      this.phoneNumber = '',
+      this.status = ''});
+  UserApp copyWith({
+    String? id,
+    String? fullName,
+    String? age,
+    String? imageAvatar,
+    List<String>? imageUrl,
+    String? gender,
+    String? phoneNumber,
+    String? status,
+  }) {
+    return UserApp(
+      id: id ?? this.id,
+      fullName: fullName ?? this.fullName,
+      age: age ?? this.age,
+      imageAvatar: imageAvatar ?? this.imageAvatar,
+      imageUrl: imageUrl ?? this.imageUrl,
+      gender: gender ?? this.gender,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      status: status ?? this.status,
+    );
+  }
+
   @override
   List<Object?> get props =>
-      [id, name, age, gender, imageUrl, phoneNumber, status];
-  static List<User> users = [
-    const User(
-        id: 1,
-        age: 22,
-        gender: 'name',
-        imageUrl: [
-          'https://scontent.fdad3-1.fna.fbcdn.net/v/t39.30808-6/286899290_164446899384811_3295116398456047817_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=JPKD6OWgd5kAX8hXdBN&_nc_oc=AQklnPyme5tuYAwDTrrAN2RwocCiHx_LyKWuNzQNTIYiziuOibx_4R1hzLwRDHNxTWwJ96MWZ7ksfUw-lpQhTcwP&_nc_ht=scontent.fdad3-1.fna&oh=00_AT81reVny-glW87ELxtwoAEEpAMzsaYzdqnk58FRwCviMA&oe=62C259ED'
-        ],
-        name: 'Huy',
+      [id, fullName, age, gender, imageAvatar, imageUrl, phoneNumber, status];
+
+  Map<String, Object> toDocument() {
+    return {
+      'fullName': fullName,
+      'age': age,
+      'imageAvatar': imageAvatar,
+      'imageUrl': imageUrl!,
+      'gender': gender,
+      'phoneNumber': phoneNumber,
+      'status': status,
+    };
+  }
+
+  factory UserApp.fromSnapshot(DocumentSnapshot snap) {
+    return UserApp(
+      id: snap.id,
+      fullName: snap['fullName'],
+      age: snap['age'],
+      imageAvatar: snap['imageAvatar'],
+      imageUrl: snap['imageUrl'],
+      gender: snap['gender'],
+      phoneNumber: snap['phoneNumber'],
+      status: snap['status'],
+    );
+  }
+  static List<UserApp> users = [
+    const UserApp(
+        id: '1',
+        imageUrl: [""],
+        fullName: 'huy',
+        status: 'yeu tien',
         phoneNumber: '0344544668',
-        status: 'love #T'),
+        imageAvatar: "",
+        age: '23',
+        gender: 'nam')
   ];
 }
