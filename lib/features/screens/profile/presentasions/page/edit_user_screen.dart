@@ -1,5 +1,5 @@
 import 'package:blogapp/entities/models/user_model.dart';
-import 'package:blogapp/features/screens/profile/edit_topic_infomation.dart';
+import 'package:blogapp/features/screens/profile/presentasions/widgets/edit_topic_infomation.dart';
 import 'package:blogapp/widgets/button_default.dart';
 import 'package:flutter/material.dart';
 
@@ -95,6 +95,10 @@ class EditUserScreens extends StatelessWidget {
                 ),
                 ButtonDefault(
                   title: 'Save',
+                  press: () {},
+                ),
+                ButtonDefault(
+                  title: 'Outlog',
                   press: () {},
                 )
               ],

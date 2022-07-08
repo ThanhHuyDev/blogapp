@@ -13,7 +13,9 @@ class SetupProfileCubit extends Cubit<SetupProfileState> {
         super(const SetupProfileState(status: SetupStatus.initial));
 
   void saveUserProfile(UserApp user) async {
-    await _userReponsitory.saveUserFirestore(user);
-    emit(state.copyWith(status: SetupStatus.profileUpdateComplete));
+    await _userReponsitory.updateUser(user);
+    if (user != null) {
+      emit(state.copyWith(status: SetupStatus.profileUpdateComplete));
+    }
   }
 }

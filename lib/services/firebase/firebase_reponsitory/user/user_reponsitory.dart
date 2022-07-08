@@ -9,62 +9,54 @@ class UserReponsitory extends BaseUserRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   UserReponsitory({FirebaseFirestore? firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
+
   @override
-  Future<void> saveUserFirestore(UserApp user) async {
-    return await _firebaseFirestore
+  Future<String> createUser(UserApp user) async {
+    final firebaseUser = _firebaseAuth.currentUser;
+    String documnetId = await _firebaseFirestore
+        .collection('users')
+        .add(user.toDocument())
+        .then((value) {
+      print('User added, ID: ${value.id}');
+      return value.id;
+    });
+    return documnetId;
+  }
+
+  @override
+  Future<void> updateUser(UserApp user) {
+    return _firebaseFirestore
         .collection('users')
         .doc(user.id)
-        .set(user.toDocument(), SetOptions(merge: true));
+        .update(user.toDocument())
+        .then((value) => print('User document updated'));
   }
 
   @override
   Stream<UserApp> getUser(String userId) {
     return _firebaseFirestore
         .collection('users')
-        .doc()
+        .doc(userId)
         .snapshots()
         .map((snap) => UserApp.fromSnapshot(snap));
   }
 
   @override
-  Future<void> updateUser(UserApp user) async {
-    return await _firebaseFirestore
-        .collection('users')
-        .doc(user.id)
-        .update(user.toDocument())
-        .then((value) => print('user document updated'));
-  }
-
-  @override
-  Future<void> updateUserPictures(String imageName) async {
-    String downloadUrl = await StorageRepository().getDownloadURL(imageName);
-    final firebaseUser = _firebaseAuth.currentUser;
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(firebaseUser!.uid)
-        .update({
+  Future<void> updateUserPictures(String imageName, UserApp user) async {
+    String downloadUrl =
+        await StorageRepository().getDownloadURL(user, imageName);
+    return FirebaseFirestore.instance.collection('users').doc(user.id).update({
       'imageUrl': FieldValue.arrayUnion([downloadUrl]),
     });
   }
 
   @override
-  Future<void> updateUserAvatar(String imageAvatar) async {
+  Future<void> updateUserAvatar(String imageAvatar, UserApp user) async {
     String downloadUrlAvatar =
         await StorageRepository().getDownloadURLAvatar(imageAvatar);
-    final firebaseUser = _firebaseAuth.currentUser;
     return FirebaseFirestore.instance
         .collection('users')
-        .doc(firebaseUser!.uid)
+        .doc()
         .update({'imageAvatar': downloadUrlAvatar});
-  }
-
-  @override
-  Stream<UserApp> getUserImage() {
-    final firebaseUser = _firebaseAuth.currentUser;
-    return _firebaseFirestore
-        .collection('users')
-        .doc(firebaseUser!.uid)
-        .snapshots()
-        .map((snap) => UserApp.fromSnapshot(snap));
   }
 }

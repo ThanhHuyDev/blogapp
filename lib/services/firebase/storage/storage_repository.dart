@@ -4,23 +4,25 @@ import 'package:blogapp/services/firebase/storage/base_storage_repository.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:image_picker/image_picker.dart';
 
+import '../../../entities/models/user_model.dart';
+
 class StorageRepository extends BaseStorageRepository {
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
   @override
-  Future<void> uploadImage(XFile image) async {
+  Future<void> uploadImage(UserApp user, XFile image) async {
     try {
       await storage
-          .ref('user_image/${image.name}')
+          .ref('${user.id}/${image.name}')
           .putFile(File(image.path))
-          .then((p0) => UserReponsitory().updateUserPictures(image.name));
+          .then((p0) => UserReponsitory().updateUserPictures(image.name, user));
     } catch (_) {}
   }
 
   @override
-  Future<String> getDownloadURL(String imageName) async {
+  Future<String> getDownloadURL(UserApp user, String imageName) async {
     String downloadURL =
-        await storage.ref('user_image/${imageName}').getDownloadURL();
+        await storage.ref('${user.id}/${imageName}').getDownloadURL();
     return downloadURL;
   }
 

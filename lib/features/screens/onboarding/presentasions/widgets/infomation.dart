@@ -1,6 +1,8 @@
 import 'package:blogapp/features/screens/onboarding/presentasions/bloc/image_avatar/image_avatar_bloc.dart';
-import 'package:blogapp/features/screens/onboarding/presentasions/cubits/cubit/setup_profile_cubit.dart';
+import 'package:blogapp/features/screens/onboarding/presentasions/bloc/onloading/onloading_bloc.dart';
+import 'package:blogapp/features/screens/onboarding/presentasions/cubits/setup/setup_profile_cubit.dart';
 import 'package:blogapp/features/screens/settings/presentasions/bloc/export_bloc.dart';
+import 'package:blogapp/widgets/checkbox.dart';
 import 'package:blogapp/widgets/image_setup.dart';
 import 'package:blogapp/widgets/text_formfied.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,13 +24,7 @@ class Infomation extends StatefulWidget {
 
 class _InfomationState extends State<Infomation> {
   _InfomationState(this.tabController);
-  List gender = ["male", "female"];
-  String? selectedGender;
   final TabController tabController;
-  final nameController = TextEditingController();
-  final ageController = TextEditingController();
-  final phoneNumberController = TextEditingController();
-  final statusController = TextEditingController();
   XFile? file;
   ImagePicker? picker;
   Future selectGalery() async {
@@ -43,120 +39,155 @@ class _InfomationState extends State<Infomation> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 60),
-            child: Column(
-              children: [
-                _buildHeader(context),
-                const SizedBox(height: 60),
-                _buildUserAvatar(context),
-                const SizedBox(height: 40),
-                CustomTextFormField(
-                  hinttext: 'input your name',
-                  labeltext: 'Name',
-                  controller: nameController,
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                CustomTextFormField(
-                  hinttext: 'input your age',
-                  labeltext: 'Age',
-                  controller: ageController,
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                CustomTextFormField(
-                  hinttext: 'input your phone',
-                  labeltext: 'Phone',
-                  controller: phoneNumberController,
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                CustomTextFormField(
-                  hinttext: 'input your status',
-                  labeltext: 'Status',
-                  controller: statusController,
-                ),
-                const SizedBox(
-                  height: 13,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Gender',
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(),
-                    ),
-                    //Use the above widget where you want the radio button
-                    SizedBox(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          addRadioButton(0, 'male', context),
-                          addRadioButton(1, 'female', context),
+    return BlocBuilder<OnloadingBloc, OnloadingState>(
+      builder: (context, state) {
+        if (state is Onloading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state is Onloaded) {
+          return Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 60),
+                  child: Column(
+                    children: [
+                      _buildHeader(context),
+                      const SizedBox(height: 60),
+                      _buildUserAvatar(context),
+                      const SizedBox(height: 40),
+                      CustomTextFormField(
+                        hinttext: 'input your name',
+                        labeltext: 'Name',
+                        onchanged: (value) {
+                          context.read<OnloadingBloc>().add(UpdateUser(
+                              user: state.user.copyWith(fullName: value)));
+                        },
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      CustomTextFormField(
+                        hinttext: 'input your age',
+                        labeltext: 'Age',
+                        onchanged: (value) {
+                          context.read<OnloadingBloc>().add(UpdateUser(
+                              user: state.user.copyWith(age: value)));
+                        },
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      CustomTextFormField(
+                        hinttext: 'input your phone',
+                        labeltext: 'Phone',
+                        onchanged: (value) {
+                          context.read<OnloadingBloc>().add(UpdateUser(
+                              user: state.user.copyWith(phoneNumber: value)));
+                        },
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      CustomTextFormField(
+                        hinttext: 'input your status',
+                        labeltext: 'Status',
+                        onchanged: (value) {
+                          context.read<OnloadingBloc>().add(UpdateUser(
+                              user: state.user.copyWith(status: value)));
+                        },
+                      ),
+                      const SizedBox(
+                        height: 13,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Gender',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                ?.copyWith(),
+                          ),
+                          //Use the above widget where you want the radio button
+                          SizedBox(
+                            height: 50,
+                            child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children: [
+                                CustomCheckbox(
+                                    text: 'male',
+                                    onchanged: (bool? newvalue) {
+                                      context.read<OnloadingBloc>().add(
+                                          UpdateUser(
+                                              user: state.user
+                                                  .copyWith(gender: 'male')));
+                                    },
+                                    value: state.user.gender == 'male'),
+                                CustomCheckbox(
+                                    text: 'female',
+                                    onchanged: (bool? newvalue) {
+                                      context.read<OnloadingBloc>().add(
+                                          UpdateUser(
+                                              user: state.user
+                                                  .copyWith(gender: 'female')));
+                                    },
+                                    value: state.user.gender == 'female'),
+                              ],
+                            ),
+                          )
                         ],
                       ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 55,
+                ),
+                Column(
+                  children: [
+                    const StepProgressIndicator(
+                      totalSteps: 3,
+                      currentStep: 2,
+                      selectedColor: Colors.deepOrange,
+                      unselectedColor: Colors.grey,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ButtonDefault(
+                      title: 'Continute',
+                      press: () {
+                        final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+                        final String uid = firebaseAuth.currentUser!.uid;
+                        if (file == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('No image selected')));
+                        }
+                        if (file != null) {
+                          print('uploading..');
+                          StorageRepository().uploadImageAvatar(file!);
+                        }
+                        tabController.animateTo(tabController.index + 1);
+                      },
                     )
                   ],
                 ),
-              ],
+              ]),
             ),
-          ),
-          const SizedBox(
-            height: 55,
-          ),
-          Column(
-            children: [
-              const StepProgressIndicator(
-                totalSteps: 4,
-                currentStep: 3,
-                selectedColor: Colors.deepOrange,
-                unselectedColor: Colors.grey,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonDefault(
-                title: 'Continute',
-                press: () {
-                  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-                  final String uid = firebaseAuth.currentUser!.uid;
-                  if (file == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('No image selected')));
-                  }
-                  if (file != null) {
-                    print('uploading..');
-                    StorageRepository().uploadImageAvatar(file!);
-                  }
-                  final UserApp user = UserApp(
-                      id: uid,
-                      fullName: nameController.text,
-                      age: ageController.text,
-                      gender: selectedGender!,
-                      phoneNumber: phoneNumberController.text,
-                      status: statusController.text,
-                      imageAvatar: file!.name,
-                      imageUrl: [
-                        file!.name,
-                      ]);
-                  context.read<SetupProfileCubit>().saveUserProfile(user);
-                  tabController.animateTo(tabController.index + 1);
-                },
-              )
-            ],
-          ),
-        ]),
-      ),
+          );
+        } else {
+          return const Text('something swent rwong');
+        }
+      },
     );
   }
 
@@ -201,30 +232,6 @@ class _InfomationState extends State<Infomation> {
           return const Text('some thing swrong!');
         }
       },
-    );
-  }
-
-  Row addRadioButton(int btnValue, String title, BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Radio<String>(
-          activeColor: Colors.deepOrange,
-          value: gender[btnValue],
-          groupValue: selectedGender,
-          onChanged: (value) {
-            setState(() {
-              selectedGender = value;
-            });
-          },
-        ),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                fontSize: 14.0,
-              ),
-        )
-      ],
     );
   }
 }

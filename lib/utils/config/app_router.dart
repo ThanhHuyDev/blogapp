@@ -1,9 +1,9 @@
 import 'package:blogapp/features/screens/onboarding/presentasions/page/onboarding_screen.dart';
-import 'package:blogapp/features/screens/profile/edit_user_screen.dart';
+import 'package:blogapp/features/screens/profile/presentasions/page/edit_user_screen.dart';
 import 'package:flutter/material.dart';
 import '../../features/screens/home/home.dart';
 import '../../features/screens/settings/presentasions/settings.dart';
-import '../../features/screens/profile/user_screen.dart';
+import '../../features/screens/profile/presentasions/page/user_screen.dart';
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {

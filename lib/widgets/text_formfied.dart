@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField(
-      {Key? key, this.hinttext, this.labeltext, this.controller})
+      {Key? key, this.hinttext, this.labeltext, this.onchanged})
       : super(key: key);
   final String? labeltext;
   final String? hinttext;
-  final TextEditingController? controller;
+  final Function(String)? onchanged;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: 60,
       child: TextFormField(
-          controller: controller!,
+          onChanged: onchanged!,
           decoration: InputDecoration(
             enabledBorder: outlineInputBorder(),
             focusedBorder: outlineInputBorder(),

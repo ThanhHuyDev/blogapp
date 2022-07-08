@@ -52,7 +52,7 @@ class Email extends StatelessWidget {
                 Column(
                   children: [
                     const StepProgressIndicator(
-                      totalSteps: 4,
+                      totalSteps: 3,
                       currentStep: 1,
                       selectedColor: Colors.deepOrange,
                       unselectedColor: Colors.grey,
@@ -64,9 +64,7 @@ class Email extends StatelessWidget {
                         title: 'Continute',
                         press: () {
                           tabController.animateTo(tabController.index + 1);
-                          if (tabController.index == 2) {
-                            context.read<SignupCubit>().signupWithCredentials();
-                          }
+                          context.read<SignupCubit>().signupWithCredentials();
                         })
                   ],
                 ),

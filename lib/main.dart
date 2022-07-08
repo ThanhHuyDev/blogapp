@@ -1,3 +1,4 @@
+import 'package:blogapp/features/screens/profile/presentasions/bloc/profile/profile_bloc.dart';
 import 'package:blogapp/features/screens/settings/presentasions/bloc/export_bloc.dart';
 import 'package:blogapp/services/firebase/firebase_reponsitory/auth/auth_reponsitory.dart';
 import 'package:blogapp/utils/config/app_router.dart';
@@ -35,16 +36,17 @@ class MyApp extends StatelessWidget {
           BlocProvider(
               create: (context) => AuthBloc(
                     authReponsitory: context.read<AuthReponsitory>(),
-                    userReponsitory: context.read<UserReponsitory>(),
                   )),
-          BlocProvider(
-              create: (context) => ImageAlbumBloc(
-                  userReponsitory: context.read<UserReponsitory>())
-                ..add(LoadImages())),
           BlocProvider(
               create: (context) => ImageAvatarBloc(
                   userReponsitory: context.read<UserReponsitory>())
                 ..add(LoadImage())),
+          BlocProvider(
+              create: (context) => ProfileBloc(
+                  authBloc: context.read<AuthBloc>(),
+                  userReponsitory: context.read<UserReponsitory>())
+                ..add(LoadProfile(
+                    userId: context.read<AuthBloc>().state.userAuth!.uid))),
         ],
         child: BlocBuilder<SwitchBloc, SwitchState>(
           builder: (context, state) {

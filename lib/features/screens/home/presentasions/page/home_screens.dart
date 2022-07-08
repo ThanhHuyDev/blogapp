@@ -1,7 +1,7 @@
 import 'package:blogapp/entities/models/user_model.dart';
 import 'package:blogapp/features/screens/home/presentasions/widgets/post_moment.dart';
 import 'package:blogapp/features/screens/home/presentasions/widgets/post_user.dart';
-import 'package:blogapp/features/screens/profile/user_screen.dart';
+import 'package:blogapp/features/screens/profile/presentasions/page/user_screen.dart';
 import 'package:blogapp/widgets/line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

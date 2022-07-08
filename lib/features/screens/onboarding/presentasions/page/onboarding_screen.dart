@@ -1,13 +1,12 @@
-import 'package:blogapp/features/screens/home/home.dart';
-import 'package:blogapp/features/screens/onboarding/presentasions/cubits/cubit/setup_profile_cubit.dart';
+import 'package:blogapp/features/screens/onboarding/presentasions/bloc/onloading/onloading_bloc.dart';
 import 'package:blogapp/features/screens/onboarding/presentasions/cubits/signup/signup_cubit.dart';
-import 'package:blogapp/features/screens/onboarding/presentasions/widgets/email_verification.dart';
 import 'package:blogapp/features/screens/onboarding/presentasions/widgets/infomation.dart';
 import 'package:blogapp/features/screens/onboarding/presentasions/widgets/pictures.dart';
 import 'package:blogapp/features/screens/onboarding/presentasions/widgets/start.dart';
 import 'package:blogapp/features/screens/settings/presentasions/bloc/export_bloc.dart';
 import 'package:blogapp/services/firebase/firebase_reponsitory/auth/auth_reponsitory.dart';
 import 'package:blogapp/services/firebase/firebase_reponsitory/user/user_reponsitory.dart';
+import 'package:blogapp/services/firebase/storage/storage_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/email.dart';
@@ -27,8 +26,10 @@ class OnboardingScreens extends StatelessWidget {
                       authReponsitory: context.read<AuthReponsitory>()),
                 ),
                 BlocProvider(
-                  create: (_) => SetupProfileCubit(
-                      userReponsitory: context.read<UserReponsitory>()),
+                  create: (_) => OnloadingBloc(
+                      userReponsitory: UserReponsitory(),
+                      storageRepository: StorageRepository())
+                    ..add(StartOnloading()),
                 ),
               ],
               child: const OnboardingScreens(),
@@ -41,9 +42,6 @@ class OnboardingScreens extends StatelessWidget {
     ),
     Tab(
       text: 'Email',
-    ),
-    Tab(
-      text: 'EmailVerification',
     ),
     Tab(
       text: 'Infomation',
@@ -64,44 +62,12 @@ class OnboardingScreens extends StatelessWidget {
         });
         return Scaffold(
           backgroundColor: Colors.white,
-          body: BlocListener<SetupProfileCubit, SetupProfileState>(
-            listener: (context, state) {
-              if (state.status == SetupStatus.profileUpdateInProgress) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(SnackBar(
-                      content: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text('Setupprofile...'),
-                      CircularProgressIndicator()
-                    ],
-                  )));
-                if (state.status == SetupStatus.profileUpdateComplete) {
-                  ScaffoldMessenger.of(context)
-                    ..hideCurrentSnackBar()
-                    ..showSnackBar(SnackBar(
-                        backgroundColor: Colors.green,
-                        content: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Text('Profile update success...'),
-                            Icon(Icons.check)
-                          ],
-                        )));
-                  Navigator.pushReplacementNamed(
-                      context, HomeScreens.routeName);
-                }
-              }
-            },
-            child: TabBarView(children: [
-              Start(tabController: tabController),
-              Email(tabController: tabController),
-              EmailVerification(tabController: tabController),
-              Infomation(tabController: tabController),
-              Pictures(tabController: tabController),
-            ]),
-          ),
+          body: TabBarView(children: [
+            Start(tabController: tabController),
+            Email(tabController: tabController),
+            Infomation(tabController: tabController),
+            Pictures(tabController: tabController),
+          ]),
         );
       }),
     );
