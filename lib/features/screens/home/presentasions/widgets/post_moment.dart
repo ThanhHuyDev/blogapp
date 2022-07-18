@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../../entities/models/user_model.dart';
 
 class PostMoment extends StatelessWidget {
-  const PostMoment({Key? key, this.user}) : super(key: key);
-  final UserApp? user;
+  const PostMoment({Key? key, required this.user}) : super(key: key);
+  final UserApp user;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class PostMoment extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 10, left: 10),
             child: Text(
-              'Khoanh khac',
+              'Khoảnh Khắc',
               style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
@@ -35,7 +35,7 @@ class PostMoment extends StatelessWidget {
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(10),
                         image: DecorationImage(
-                            image: NetworkImage(user!.imageUrl![0]),
+                            image: NetworkImage(user.imageUrl![0]),
                             fit: BoxFit.cover)),
                   );
                 }),

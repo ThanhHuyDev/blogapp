@@ -1,8 +1,7 @@
-import 'package:blogapp/services/firebase/firebase_reponsitory/auth/auth_reponsitory.dart';
-import 'package:blogapp/services/firebase/firebase_reponsitory/user/user_reponsitory.dart';
+import 'package:blogapp/services/firebase/firestore_reponsitory/auth/auth_reponsitory.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
-import '../../../../../../entities/models/user_model.dart';
 import '../../bloc/export_bloc.dart';
 
 part 'signup_state.dart';
@@ -21,12 +20,12 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(password: value, status: SignupStatus.initial));
   }
 
-  void signupWithCredentials() async {
+  Future<void> signupWithCredentials() async {
     if (!state.isValid) return;
     try {
-      await _authReponsitory.signUp(
+      var user = await _authReponsitory.signUp(
           email: state.email, password: state.password);
-      emit(state.copyWith(status: SignupStatus.success));
+      emit(state.copyWith(status: SignupStatus.success, userAuth: user));
     } catch (_) {}
   }
 }

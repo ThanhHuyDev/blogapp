@@ -1,7 +1,11 @@
 import 'package:blogapp/entities/models/user_model.dart';
+import 'package:blogapp/features/screens/onboarding/presentasions/page/onboarding_screen.dart';
+import 'package:blogapp/features/screens/profile/presentasions/bloc/profile/profile_bloc.dart';
 import 'package:blogapp/features/screens/profile/presentasions/widgets/edit_topic_infomation.dart';
+import 'package:blogapp/services/firebase/firestore_reponsitory/auth/auth_reponsitory.dart';
 import 'package:blogapp/widgets/button_default.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditUserScreens extends StatelessWidget {
   static const String routeName = '/editusers';
@@ -16,16 +20,124 @@ class EditUserScreens extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserApp user = UserApp.users[0];
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).bottomAppBarColor,
         title: const Text('Edit Profile'),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          // Stack(
+      body: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          if (state is ProfileLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state is ProfileLoaded) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                _buildUserAvatar(context, state.user),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      EditTopicInfomation(
+                        title: state.user.fullName,
+                        press: () {},
+                      ),
+                      EditTopicInfomation(
+                        title: state.user.age.toString(),
+                        press: () {},
+                      ),
+                      EditTopicInfomation(
+                        title: state.user.phoneNumber,
+                        press: () {},
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ButtonDefault(
+                        title: 'Save',
+                        press: () {},
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ButtonDefault(
+                        title: 'Outlog',
+                        press: () {
+                          RepositoryProvider.of<AuthReponsitory>(context)
+                              .signOut();
+                          Navigator.pushNamed(
+                              context, OnboardingScreens.routeName);
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const Center(
+              child: Text('somthing went wrong'),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Row _buildUserAvatar(BuildContext context, UserApp user) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          children: [
+            CircleAvatar(
+              radius: 50,
+              backgroundImage: NetworkImage(user.imageAvatar),
+            ),
+            Positioned(
+              bottom: -4,
+              right: -4,
+              child: Container(
+                height: 45,
+                width: 45,
+                decoration: BoxDecoration(
+                  // color: Colors.red,
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(
+                    width: 2.5,
+                    color: Colors.white,
+                  ),
+                ),
+                child: Material(
+                  borderRadius: BorderRadius.circular(100),
+                  color: Colors.deepPurple,
+                  clipBehavior: Clip.hardEdge,
+                  child: InkWell(
+                    onTap: () {},
+                    borderRadius: BorderRadius.circular(100),
+                    child: const Icon(
+                      Icons.camera_alt_outlined,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ],
+    );
+  }
+}
+  // Stack(
           //   children: [
           //     Container(
           //       height: MediaQuery.of(context).size.height / 4,
@@ -70,90 +182,3 @@ class EditUserScreens extends StatelessWidget {
           //     )
           //   ],
           // ),
-          const SizedBox(
-            height: 20,
-          ),
-          _buildUserAvatar(context),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                EditTopicInfomation(
-                  title: user.fullName,
-                  press: () {},
-                ),
-                EditTopicInfomation(
-                  title: user.age.toString(),
-                  press: () {},
-                ),
-                EditTopicInfomation(
-                  title: user.phoneNumber,
-                  press: () {},
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ButtonDefault(
-                  title: 'Save',
-                  press: () {},
-                ),
-                ButtonDefault(
-                  title: 'Outlog',
-                  press: () {},
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Row _buildUserAvatar(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Stack(
-          clipBehavior: Clip.none,
-          children: [
-            const CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(
-                  'https://scontent.fdad3-4.fna.fbcdn.net/v/t39.30808-6/272661431_1107969983372040_196971888314167653_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=174925&_nc_ohc=0DpHYfySoxwAX9x7Lbs&_nc_oc=AQmToV6EhREQx3Cx6moZPRozxBPFn7VcNlC3-M4UKjuHxhtay8tYRAvOcAoHEEHtN3soE_Ks9ARAQ5yvyCOFMKBN&_nc_ht=scontent.fdad3-4.fna&oh=00_AT9aZRj_XmRtj_MGAv80sbivNrJ7Xc-GHLu1BmxBZRyMlw&oe=62CAFCAD'),
-            ),
-            Positioned(
-              bottom: -4,
-              right: -4,
-              child: Container(
-                height: 45,
-                width: 45,
-                decoration: BoxDecoration(
-                  // color: Colors.red,
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
-                    width: 2.5,
-                    color: Colors.white,
-                  ),
-                ),
-                child: Material(
-                  borderRadius: BorderRadius.circular(100),
-                  color: Colors.deepPurple,
-                  clipBehavior: Clip.hardEdge,
-                  child: InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(100),
-                    child: const Icon(
-                      Icons.camera_alt_outlined,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
-      ],
-    );
-  }
-}

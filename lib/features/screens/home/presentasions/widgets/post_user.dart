@@ -1,14 +1,19 @@
+import 'package:blogapp/features/screens/upload_post/presentasions/bloc/bloc/user_post_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:readmore/readmore.dart';
-
+import '../../../../../entities/models/post_model.dart';
 import '../../../../../entities/models/user_model.dart';
 import '../../../../../widgets/line.dart';
 
 class PostUser extends StatelessWidget {
-  const PostUser({Key? key, this.user, required this.radius}) : super(key: key);
+  const PostUser(
+      {Key? key, required this.radius, required this.post, required this.user})
+      : super(key: key);
 
-  final UserApp? user;
+  final Post post;
   final double radius;
+  final UserApp user;
 
   @override
   Widget build(BuildContext context) {
@@ -24,35 +29,35 @@ class PostUser extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage(user!.imageUrl![0]),
+                backgroundImage: NetworkImage(user.imageAvatar),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Giang Thanh Huy'),
-                    Text('30/06/2022'),
+                  children: [
+                    Text(user.fullName),
+                    Text(post.time!),
                   ],
                 ),
               ),
             ],
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+        Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
           child: ReadMoreText(
-            'Em oi !\nCo biet dieu gi\nThat dau trong cuoc song muon mau\nEm ak !!!',
-            style: TextStyle(
+            post.caption!,
+            style: const TextStyle(
               fontSize: 14.0,
               fontWeight: FontWeight.w500,
             ),
             trimLines: 3,
             colorClickableText: Colors.grey,
             trimMode: TrimMode.Line,
-            trimCollapsedText: 'Xem them',
+            trimCollapsedText: 'Xem thêm',
             trimExpandedText: '',
-            moreStyle: TextStyle(
+            moreStyle: const TextStyle(
                 fontSize: 14.0,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey),
@@ -62,11 +67,9 @@ class PostUser extends StatelessWidget {
           height: 300,
           width: double.infinity,
           margin: const EdgeInsets.only(top: 10, bottom: 10),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(
-                      'https://scontent.fdad3-6.fna.fbcdn.net/v/t39.30808-6/254276547_1059567978212241_4678114046598593988_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=U3pCWAPnxOQAX9mN1KS&_nc_ht=scontent.fdad3-6.fna&oh=00_AT9Jz6oiXiXeEE6Ga9VHimaMeb2fJME880Y8Ttyflm3-vA&oe=62C7DE4C'),
-                  fit: BoxFit.cover)),
+                  image: NetworkImage(post.imagePost!), fit: BoxFit.cover)),
         ),
         Row(
           children: const [
@@ -106,7 +109,9 @@ class PostUser extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        const Line(),
+        const Line(
+          height: 4,
+        ),
       ]),
     );
   }

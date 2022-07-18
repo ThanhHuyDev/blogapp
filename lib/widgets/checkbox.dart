@@ -14,13 +14,10 @@ class CustomCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Checkbox(value: value, onChanged: onchanged),
+        Checkbox(
+            value: value, activeColor: Colors.deepOrange, onChanged: onchanged),
         Text(
           text,
-          style: Theme.of(context)
-              .textTheme
-              .headline5!
-              .copyWith(fontWeight: FontWeight.normal),
         )
       ],
     );

@@ -19,8 +19,12 @@ class PostCard extends StatelessWidget {
           children: [
             Expanded(
               child: CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(user.imageUrl![0]),
+                radius: 31,
+                backgroundColor: Theme.of(context).primaryColorDark,
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(user.imageAvatar),
+                ),
               ),
             ),
             Expanded(
@@ -30,6 +34,7 @@ class PostCard extends StatelessWidget {
                 child: Container(
                   height: 45,
                   width: double.infinity,
+                  padding: const EdgeInsets.only(left: 10),
                   margin: const EdgeInsets.only(top: 7, right: 30, left: 10),
                   decoration: BoxDecoration(
                       color: Theme.of(context).primaryColorDark,
@@ -38,7 +43,8 @@ class PostCard extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        '${user.fullName} oi, hom nay ban the nao ?',
+                        '${user.fullName} ơi, hôm nay bạn thế nào ?',
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
                             .textTheme
                             .bodyText1!

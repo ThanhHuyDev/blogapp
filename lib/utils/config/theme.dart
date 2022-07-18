@@ -9,6 +9,7 @@ class AppThemes {
       primaryColorDark: const Color(0xff757575),
       primaryColor: Colors.black,
       brightness: Brightness.dark,
+      fontFamily: 'Muli',
       backgroundColor: const Color(0xFF212121),
       dividerColor: Colors.black54,
       floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -34,6 +35,7 @@ class AppThemes {
       primaryColor: Colors.white,
       primaryColorDark: const Color.fromARGB(255, 223, 222, 222),
       brightness: Brightness.light,
+      fontFamily: 'Muli',
       backgroundColor: const Color(0xFFE5E5E5),
       dividerColor: const Color(0xff757575),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(

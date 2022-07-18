@@ -1,14 +1,12 @@
-import 'dart:io';
-
 import 'package:blogapp/widgets/avatar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import '../features/screens/onboarding/presentasions/bloc/onloading/onloading_bloc.dart';
 
 class ImageSetup extends StatelessWidget {
-  const ImageSetup({Key? key, this.imageUrl, this.press}) : super(key: key);
-
+  const ImageSetup({Key? key, this.imageUrl}) : super(key: key);
   final String? imageUrl;
-  final VoidCallback? press;
-
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -43,7 +41,25 @@ class ImageSetup extends StatelessWidget {
                         color: Colors.deepPurple,
                         clipBehavior: Clip.hardEdge,
                         child: InkWell(
-                          onTap: press,
+                          onTap: () async {
+                            ImagePicker? picker = ImagePicker();
+                            final XFile? image = await picker.pickImage(
+                                source: ImageSource.gallery);
+                            if (image == null) {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('No image selected')));
+                            }
+                            if (image != null) {
+                              // ignore: avoid_print
+                              print('uploading..');
+                              // ignore: use_build_context_synchronously
+                              context
+                                  .read<OnloadingBloc>()
+                                  .add(UpdateUserImageAvatar(image: image));
+                            }
+                          },
                           borderRadius: BorderRadius.circular(100),
                           child: const Icon(
                             Icons.camera_alt_outlined,
@@ -57,7 +73,7 @@ class ImageSetup extends StatelessWidget {
               )
             : Avatar(
                 size: 100,
-                imageFile: File(imageUrl!),
+                photoUrl: imageUrl,
               )
       ],
     );

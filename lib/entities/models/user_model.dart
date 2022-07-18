@@ -6,7 +6,7 @@ class UserApp extends Equatable {
   final String? id;
   final String fullName;
   final String age;
-  final String? imageAvatar;
+  final String imageAvatar;
   final List<dynamic>? imageUrl;
   final String gender;
   final String phoneNumber;
@@ -16,7 +16,7 @@ class UserApp extends Equatable {
       {this.id,
       this.age = '',
       this.gender = '',
-      this.imageAvatar,
+      this.imageAvatar = '',
       this.imageUrl,
       this.fullName = '',
       this.phoneNumber = '',
@@ -26,7 +26,7 @@ class UserApp extends Equatable {
     String? fullName,
     String? age,
     String? imageAvatar,
-    List<String>? imageUrl,
+    List<dynamic>? imageUrl,
     String? gender,
     String? phoneNumber,
     String? status,
@@ -49,9 +49,10 @@ class UserApp extends Equatable {
 
   Map<String, Object> toDocument() {
     return {
+      'id': id!,
       'fullName': fullName,
       'age': age,
-      'imageAvatar': imageAvatar!,
+      'imageAvatar': imageAvatar,
       'imageUrl': imageUrl!,
       'gender': gender,
       'phoneNumber': phoneNumber,
@@ -71,15 +72,4 @@ class UserApp extends Equatable {
       status: snap['status'],
     );
   }
-  static List<UserApp> users = [
-    const UserApp(
-        id: '1',
-        imageUrl: [""],
-        fullName: 'huy',
-        status: 'yeu tien',
-        phoneNumber: '0344544668',
-        imageAvatar: "",
-        age: '23',
-        gender: 'nam')
-  ];
 }

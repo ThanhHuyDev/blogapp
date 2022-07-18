@@ -1,21 +1,31 @@
+import 'package:blogapp/services/firebase/firestore_reponsitory/auth/auth_reponsitory.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../../../../../entities/models/user_model.dart';
-import '../../../../../../services/firebase/firebase_reponsitory/user/user_reponsitory.dart';
 import '../../bloc/export_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 part 'setup_profile_state.dart';
 
-class SetupProfileCubit extends Cubit<SetupProfileState> {
-  final UserReponsitory _userReponsitory;
-  SetupProfileCubit({required UserReponsitory userReponsitory})
-      : _userReponsitory = userReponsitory,
-        super(const SetupProfileState(status: SetupStatus.initial));
+class LoginCubit extends Cubit<LoginState> {
+  final AuthReponsitory _authReponsitory;
+  LoginCubit({required AuthReponsitory authReponsitory})
+      : _authReponsitory = authReponsitory,
+        super(LoginState.initial());
 
-  void saveUserProfile(UserApp user) async {
-    await _userReponsitory.updateUser(user);
-    if (user != null) {
-      emit(state.copyWith(status: SetupStatus.profileUpdateComplete));
-    }
+  void emailChanged(String value) {
+    emit(state.copyWith(email: value, status: LoginStatus.initial));
+  }
+
+  void passwordChanged(String value) {
+    emit(state.copyWith(password: value, status: LoginStatus.initial));
+  }
+
+  Future<void> loginWithCredentials() async {
+    if (state.status == LoginStatus.submitting) return;
+    emit(state.copyWith(status: LoginStatus.submitting));
+    try {
+      await _authReponsitory.logInWithEmailAndPassword(
+          email: state.email, password: state.password);
+      emit(state.copyWith(status: LoginStatus.success));
+    } catch (_) {}
   }
 }

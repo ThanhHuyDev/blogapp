@@ -12,9 +12,9 @@ class CustomTextField extends StatelessWidget {
         style: const TextStyle(fontSize: 20),
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
           hintText: text,
-          contentPadding: const EdgeInsets.only(bottom: 5.0, top: 12.5),
+          contentPadding:
+              const EdgeInsets.only(bottom: 5.0, top: 12.5, left: 10),
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.white),
           ),

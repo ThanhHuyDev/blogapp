@@ -1,5 +1,5 @@
 import 'package:blogapp/entities/models/user_model.dart';
-import 'package:blogapp/services/firebase/firebase_reponsitory/user/base_user_reponsitory.dart';
+import 'package:blogapp/services/firebase/firestore_reponsitory/user/base_user_reponsitory.dart';
 import 'package:blogapp/services/firebase/storage/storage_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,16 +11,11 @@ class UserReponsitory extends BaseUserRepository {
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   @override
-  Future<String> createUser(UserApp user) async {
-    final firebaseUser = _firebaseAuth.currentUser;
-    String documnetId = await _firebaseFirestore
+  Future<void> createUser(UserApp user) async {
+    await _firebaseFirestore
         .collection('users')
-        .add(user.toDocument())
-        .then((value) {
-      print('User added, ID: ${value.id}');
-      return value.id;
-    });
-    return documnetId;
+        .doc(user.id)
+        .set(user.toDocument());
   }
 
   @override
@@ -29,6 +24,7 @@ class UserReponsitory extends BaseUserRepository {
         .collection('users')
         .doc(user.id)
         .update(user.toDocument())
+        // ignore: avoid_print
         .then((value) => print('User document updated'));
   }
 
@@ -53,10 +49,20 @@ class UserReponsitory extends BaseUserRepository {
   @override
   Future<void> updateUserAvatar(String imageAvatar, UserApp user) async {
     String downloadUrlAvatar =
-        await StorageRepository().getDownloadURLAvatar(imageAvatar);
+        await StorageRepository().getDownloadURLAvatar(user, imageAvatar);
     return FirebaseFirestore.instance
         .collection('users')
-        .doc()
+        .doc(user.id)
         .update({'imageAvatar': downloadUrlAvatar});
+  }
+
+  @override
+  Stream<UserApp> getUserHome() {
+    final firebaseUser = _firebaseAuth.currentUser;
+    return _firebaseFirestore
+        .collection('users')
+        .doc(firebaseUser!.uid)
+        .snapshots()
+        .map((snap) => UserApp.fromSnapshot(snap));
   }
 }

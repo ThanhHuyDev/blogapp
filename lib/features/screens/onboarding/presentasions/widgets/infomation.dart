@@ -1,17 +1,10 @@
-import 'package:blogapp/features/screens/onboarding/presentasions/bloc/image_avatar/image_avatar_bloc.dart';
 import 'package:blogapp/features/screens/onboarding/presentasions/bloc/onloading/onloading_bloc.dart';
-import 'package:blogapp/features/screens/onboarding/presentasions/cubits/setup/setup_profile_cubit.dart';
 import 'package:blogapp/features/screens/settings/presentasions/bloc/export_bloc.dart';
 import 'package:blogapp/widgets/checkbox.dart';
 import 'package:blogapp/widgets/image_setup.dart';
 import 'package:blogapp/widgets/text_formfied.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-
-import '../../../../../entities/models/user_model.dart';
-import '../../../../../services/firebase/storage/storage_repository.dart';
 import '../../../../../widgets/button_default.dart';
 
 class Infomation extends StatefulWidget {
@@ -19,24 +12,13 @@ class Infomation extends StatefulWidget {
   final TabController tabController;
 
   @override
+  // ignore: no_logic_in_create_state
   State<Infomation> createState() => _InfomationState(tabController);
 }
 
 class _InfomationState extends State<Infomation> {
   _InfomationState(this.tabController);
   final TabController tabController;
-  XFile? file;
-  ImagePicker? picker;
-  Future selectGalery() async {
-    picker = ImagePicker();
-    final result = await picker?.pickImage(source: ImageSource.gallery);
-    if (result == null) return;
-    setState(() {
-      file = result;
-      context.read<ImageAvatarBloc>().add(UpdateImage(file!.path));
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OnloadingBloc, OnloadingState>(
@@ -47,6 +29,8 @@ class _InfomationState extends State<Infomation> {
           );
         }
         if (state is Onloaded) {
+          var images = state.user.imageAvatar;
+          var imageCount = images.length;
           return Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
@@ -60,7 +44,11 @@ class _InfomationState extends State<Infomation> {
                     children: [
                       _buildHeader(context),
                       const SizedBox(height: 60),
-                      _buildUserAvatar(context),
+                      (imageCount > 0)
+                          ? ImageSetup(
+                              imageUrl: images,
+                            )
+                          : const ImageSetup(),
                       const SizedBox(height: 40),
                       CustomTextFormField(
                         hinttext: 'input your name',
@@ -149,7 +137,7 @@ class _InfomationState extends State<Infomation> {
                   ),
                 ),
                 const SizedBox(
-                  height: 55,
+                  height: 40,
                 ),
                 Column(
                   children: [
@@ -165,17 +153,6 @@ class _InfomationState extends State<Infomation> {
                     ButtonDefault(
                       title: 'Continute',
                       press: () {
-                        final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-                        final String uid = firebaseAuth.currentUser!.uid;
-                        if (file == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('No image selected')));
-                        }
-                        if (file != null) {
-                          print('uploading..');
-                          StorageRepository().uploadImageAvatar(file!);
-                        }
                         tabController.animateTo(tabController.index + 1);
                       },
                     )
@@ -206,32 +183,6 @@ class _InfomationState extends State<Infomation> {
         ),
         // const Icon(Icons.menu),
       ],
-    );
-  }
-
-  Widget _buildUserAvatar(BuildContext context) {
-    return BlocBuilder<ImageAvatarBloc, ImageAvatarState>(
-      builder: (context, state) {
-        if (state is ImageAvatarLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (state is ImageAvatarLoaded) {
-          var imageCount = state.imageAvatar.length;
-          return (imageCount > 0)
-              ? ImageSetup(
-                  imageUrl: state.imageAvatar,
-                )
-              : ImageSetup(
-                  press: () {
-                    selectGalery();
-                  },
-                );
-        } else {
-          return const Text('some thing swrong!');
-        }
-      },
     );
   }
 }

@@ -15,9 +15,9 @@ class CustomTextFormField extends StatelessWidget {
       child: TextFormField(
           onChanged: onchanged!,
           decoration: InputDecoration(
-            enabledBorder: outlineInputBorder(),
-            focusedBorder: outlineInputBorder(),
-            border: outlineInputBorder(),
+            enabledBorder: outlineInputBorder(context),
+            focusedBorder: outlineInputBorder(context),
+            border: outlineInputBorder(context),
             labelText: labeltext,
             hintText: hinttext,
             hintStyle: const TextStyle(fontSize: 16),
@@ -29,9 +29,9 @@ class CustomTextFormField extends StatelessWidget {
     );
   }
 
-  outlineInputBorder() {
+  outlineInputBorder(BuildContext context) {
     return OutlineInputBorder(
         borderRadius: BorderRadius.circular(20),
-        borderSide: const BorderSide(color: Colors.black38));
+        borderSide: BorderSide(color: Theme.of(context).primaryColorDark));
   }
 }

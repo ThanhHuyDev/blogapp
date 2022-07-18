@@ -1,5 +1,4 @@
-import 'package:blogapp/entities/models/user_model.dart';
-import 'package:blogapp/services/firebase/firebase_reponsitory/auth/base_auth_reponsitory.dart';
+import 'package:blogapp/services/firebase/firestore_reponsitory/auth/base_auth_reponsitory.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 class AuthReponsitory extends BaseAuthRepository {

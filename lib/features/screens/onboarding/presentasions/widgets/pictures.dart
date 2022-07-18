@@ -1,5 +1,5 @@
 import 'package:blogapp/features/screens/home/home.dart';
-import 'package:blogapp/features/screens/onboarding/presentasions/bloc/image_album/image_album_bloc.dart';
+import 'package:blogapp/features/screens/login/presentasions/page/login_screen.dart';
 import 'package:blogapp/features/screens/onboarding/presentasions/bloc/onloading/onloading_bloc.dart';
 import 'package:blogapp/widgets/custom_image_container.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +10,8 @@ import '../../../../../widgets/text_header.dart';
 import '../../../settings/presentasions/bloc/export_bloc.dart';
 
 class Pictures extends StatelessWidget {
-  const Pictures({Key? key, required this.tabController}) : super(key: key);
-  final TabController tabController;
+  const Pictures({Key? key, this.tabController}) : super(key: key);
+  final TabController? tabController;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class Pictures extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomTextHeader(
-                        tabController: tabController,
+                        tabController: tabController!,
                         text: 'Add picture album',
                       ),
                       const SizedBox(
@@ -53,8 +53,13 @@ class Pictures extends StatelessWidget {
                               return (imageCount > index)
                                   ? CustomImageContainer(
                                       imageUrl: images[index],
+                                      height: 150,
+                                      width: 103,
                                     )
-                                  : const CustomImageContainer();
+                                  : const CustomImageContainer(
+                                      height: 150,
+                                      width: 103,
+                                    );
                             }),
                       )
                       // return Column(
